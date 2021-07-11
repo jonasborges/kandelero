@@ -3,3 +3,6 @@
 __author__ = """Jonas Borges Alves"""
 __email__ = "jonasborgesalves@gmail.com"
 __version__ = "0.1.0"
+
+
+from .candlestick import Candlestick
