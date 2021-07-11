@@ -8,7 +8,7 @@
 </a>
 
 <a href="https://github.com/jonasborges/kandelero/actions">
-    <img src="https://github.com/jonasborges/kandelero/actions/workflows/main.yml/badge.svg?branch=release" alt="CI Status">
+    <img src="https://github.com/jonasborges/kandelero/actions/workflows/dev.yml/badge.svg?branch=master" alt="CI Status">
 </a>
 
 <a href="https://kandelero.readthedocs.io/en/latest/?badge=latest">
@@ -26,7 +26,7 @@ Pattern finder for candlestick charts
 
 
 * Free software: MIT
-* Documentation: <https://kandelero.readthedocs.io>
+* Documentation: <https://jonasborges.github.io/kandelero>
 
 
 ## Features
