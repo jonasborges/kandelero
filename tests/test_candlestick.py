@@ -1,4 +1,4 @@
-from hypothesis import assume, given
+from hypothesis import HealthCheck, assume, given, settings
 from hypothesis import strategies as st
 from kandelero import Candlestick
 
@@ -46,6 +46,7 @@ def test_neither_bear_nor_bull(value, high, low):
     assert not obj.is_bearish
 
 
+@settings(suppress_health_check=(HealthCheck.too_slow,))
 @given(
     NOT_NAN_DECIMAL,
     st.decimals(),

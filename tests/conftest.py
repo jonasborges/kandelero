@@ -32,17 +32,7 @@ def decimal_max_places():
 
 
 @pytest.fixture(scope="session")
-def valid_decimal():
-    return st.decimals(
-        allow_nan=False,
-        allow_infinity=False,
-    )
-
-
-@pytest.fixture(scope="session")
-def valid_decimal_within_range(
-    decimal_min_value, decimal_max_value, decimal_max_places
-):
+def valid_decimal(decimal_min_value, decimal_max_value, decimal_max_places):
     return st.decimals(
         min_value=decimal_min_value,
         max_value=decimal_max_value,

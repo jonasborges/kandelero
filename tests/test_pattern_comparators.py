@@ -53,7 +53,12 @@ def test_is_bullish_engulfing(valid_decimal, decimal_min_value, data):
         high=None,
         low=None,
         open=data.draw(
-            st.decimals(max_value=shortest.close, allow_infinity=False, allow_nan=False)
+            st.decimals(
+                max_value=shortest.close,
+                allow_infinity=False,
+                allow_nan=False,
+                min_value=decimal_min_value,
+            )
         ),
         close=data.draw(
             st.decimals(
