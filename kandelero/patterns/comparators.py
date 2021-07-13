@@ -17,3 +17,9 @@ def is_bearish_engulfing(previous: Candlestick, current: Candlestick):
         and current.open >= previous.close
         and current.close < previous.open
     )
+
+
+COMPARATORS = [
+    is_bearish_engulfing,
+    is_bullish_engulfing,
+]
