@@ -6,7 +6,12 @@ from kandelero.patterns.helpers import is_gap_up
 
 
 @pytest.mark.happy_path
-@settings(suppress_health_check=(HealthCheck.filter_too_much,))
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    )
+)
 @given(data=st.data())
 def test_is_gap_up_both_bullish(data, valid_decimal):
     previous = Candlestick(
@@ -30,7 +35,12 @@ def test_is_gap_up_both_bullish(data, valid_decimal):
 
 
 @pytest.mark.happy_path
-@settings(suppress_health_check=(HealthCheck.filter_too_much,))
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    )
+)
 @given(data=st.data())
 def test_is_gap_up_both_bearish(data, valid_decimal):
     previous = Candlestick(
@@ -54,7 +64,12 @@ def test_is_gap_up_both_bearish(data, valid_decimal):
 
 
 @pytest.mark.happy_path
-@settings(suppress_health_check=(HealthCheck.filter_too_much,))
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    )
+)
 @given(data=st.data())
 def test_is_gap_up_bear_plus_bull(data, valid_decimal):
     previous = Candlestick(
@@ -78,7 +93,12 @@ def test_is_gap_up_bear_plus_bull(data, valid_decimal):
 
 
 @pytest.mark.happy_path
-@settings(suppress_health_check=(HealthCheck.filter_too_much,))
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    )
+)
 @given(data=st.data())
 def test_is_gap_up_bull_plus_bear(data, valid_decimal):
     previous = Candlestick(

@@ -46,7 +46,12 @@ def test_neither_bear_nor_bull(value, high, low):
     assert not obj.is_bearish
 
 
-@settings(suppress_health_check=(HealthCheck.too_slow,))
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    )
+)
 @given(
     NOT_NAN_DECIMAL,
     st.decimals(),
@@ -60,6 +65,12 @@ def test_bear_or_bull(open, high, low, close):
     assert not all(x for x in (obj.is_bullish, obj.is_bearish))
 
 
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    )
+)
 @given(*DEFAULT_SCENARIO)
 def test_properties(open, high, low, close):
     assume(high >= open)

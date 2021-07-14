@@ -1,9 +1,12 @@
+import pytest
 from hypothesis import assume, given
 from hypothesis import strategies as st
 from kandelero import Candlestick
 from kandelero.patterns.comparators import is_bearish_engulfing, is_bullish_engulfing
 
 
+@pytest.mark.bearish_pattern
+@pytest.mark.happy_path
 @given(
     data=st.data(),
 )
@@ -37,6 +40,8 @@ def test_is_bearish_engulfing(valid_decimal, decimal_min_value, data):
     assert longest.is_bearish
 
 
+@pytest.mark.bullish_pattern
+@pytest.mark.happy_path
 @given(
     data=st.data(),
 )
