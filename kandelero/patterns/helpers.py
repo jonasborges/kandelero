@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from kandelero.candlestick import Candlestick
 
 
@@ -11,3 +13,7 @@ def is_gap_up(previous: Candlestick, current: Candlestick) -> bool:
 
 def is_gap_down(previous: Candlestick, current: Candlestick) -> bool:
     return is_gap(lowest=current, upmost=previous)
+
+
+def is_harami_size(previous: Candlestick, current: Candlestick) -> bool:
+    return current.body_len <= (previous.body_len * Decimal("0.5"))

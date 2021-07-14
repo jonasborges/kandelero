@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from decimal import Decimal, getcontext
 
-getcontext().prec = 50
-
 
 @dataclass()
 class Candlestick:
