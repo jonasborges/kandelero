@@ -211,10 +211,16 @@ def test_special_cases_proportions(obj):
     "obj",
     [
         Candlestick(
-            open=Decimal("0.0001"),
-            high=Decimal("0.0001"),
-            low=Decimal("0.0001"),
-            close=Decimal("0.0001"),
+            open=MAX_VALUE,
+            high=MAX_VALUE,
+            low=MAX_VALUE,
+            close=MAX_VALUE,
+        ),
+        Candlestick(
+            open=MIN_VALUE,
+            high=MIN_VALUE,
+            low=MIN_VALUE,
+            close=MIN_VALUE,
         ),
     ],
 )

@@ -1,22 +1,22 @@
-from decimal import Decimal
-
 import pytest
+from hypothesis import assume
 from hypothesis import strategies as st
+from kandelero.calculations import DECIMAL_PLACES, MAX_VALUE, MIN_VALUE
 
 
 @pytest.fixture(scope="session")
 def decimal_min_value():
-    return Decimal("0.00000000000000000001")
+    return MIN_VALUE
 
 
 @pytest.fixture(scope="session")
 def decimal_max_value():
-    return Decimal("900000000000000000000")
+    return MAX_VALUE
 
 
 @pytest.fixture(scope="session")
 def decimal_max_places():
-    return 20
+    return DECIMAL_PLACES
 
 
 @pytest.fixture(scope="session")

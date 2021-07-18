@@ -4,8 +4,8 @@ from functools import wraps
 
 DECIMAL_PLACES = 4
 ZERO = Decimal(0)
-MIN_VALUE = 0.0001
-MAX_VALUE = 9999999999
+MIN_VALUE = Decimal("0.0001")
+MAX_VALUE = Decimal("9999999999")
 
 
 def round_up(number: Decimal, decimal_places: int = DECIMAL_PLACES) -> Decimal:

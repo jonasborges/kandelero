@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from itertools import cycle
 
-from .calculations import ZERO, round_down, safe_div
+from .calculations import MIN_VALUE, ZERO, round_down, safe_div
 
 
 class Candlestick:
@@ -43,7 +43,7 @@ class Candlestick:
                 )
             )
 
-            step = Decimal("0.0001")
+            step = MIN_VALUE
             while diff > ZERO:
                 part_name = next(parts)
                 current_value = getattr(self, part_name)
@@ -84,8 +84,8 @@ class Candlestick:
 
     @property
     def is_valid_candle(self) -> bool:
-        low_is_lowest = all(v >= self.low for v in (self.high, self.close, self.open))
-        high_is_highest = all(v <= self.high for v in (self.low, self.close, self.open))
+        low_is_lowest = min((self.open, self.high, self.low, self.close)) == self.low
+        high_is_highest = max((self.open, self.high, self.low, self.close)) == self.high
 
         positive_proportions = all(
             v >= ZERO
@@ -94,6 +94,18 @@ class Candlestick:
                 self.wick_proportion,
                 self.tail_proportion,
             )
+        )
+
+        # flat candles will have proportion == ZERO
+        correct_proportions = (
+            sum(
+                (
+                    self.body_proportion,
+                    self.wick_proportion,
+                    self.tail_proportion,
+                )
+            )
+            in (ZERO, Decimal(1))
         )
 
         positive_lengths = all(
@@ -110,6 +122,7 @@ class Candlestick:
             and high_is_highest
             and positive_proportions
             and positive_lengths
+            and correct_proportions
         )
 
     @property
