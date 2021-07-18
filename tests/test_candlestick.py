@@ -1,17 +1,17 @@
+from decimal import Decimal
+
+import pytest
 from hypothesis import HealthCheck, assume, given, settings
 from hypothesis import strategies as st
 from kandelero import Candlestick
-
-NOT_NAN_DECIMAL = st.decimals(
-    allow_nan=False,
-)
+from kandelero.calculations import MAX_VALUE, MIN_VALUE
 
 DECIMAL = st.decimals(
-    min_value=0.00000000000000000001,
-    max_value=900000000000000000000,
+    min_value=MIN_VALUE,
+    max_value=MAX_VALUE,
     allow_nan=False,
     allow_infinity=False,
-    places=20,
+    places=4,
 )
 
 DEFAULT_SCENARIO = (
@@ -22,26 +22,65 @@ DEFAULT_SCENARIO = (
 )
 
 
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    ),
+    max_examples=250,
+)
 @given(*DEFAULT_SCENARIO)
 def test_is_bullish(open, high, low, close):
+    assume(high >= open)
+    assume(high >= low)
+    assume(high >= close)
+    assume(low <= open)
+    assume(low <= close)
     assume(close > open)
     obj = Candlestick(open=open, high=high, low=low, close=close)
+
     assert obj.is_bullish
     assert not obj.is_bearish
 
 
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    ),
+    max_examples=250,
+)
 @given(*DEFAULT_SCENARIO)
 def test_is_bearish(open, high, low, close):
+    assume(high >= open)
+    assume(high >= low)
+    assume(high >= close)
+    assume(low <= open)
+    assume(low <= close)
     assume(close < open)
     obj = Candlestick(open=open, high=high, low=low, close=close)
+
     assert not obj.is_bullish
     assert obj.is_bearish
 
 
-@given(NOT_NAN_DECIMAL, NOT_NAN_DECIMAL, NOT_NAN_DECIMAL)
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    ),
+    max_examples=250,
+)
+@given(DECIMAL, DECIMAL, DECIMAL)
 def test_neither_bear_nor_bull(value, high, low):
     open = close = value
+    assume(high >= open)
+    assume(high >= low)
+    assume(high >= close)
+    assume(low <= open)
+    assume(low <= close)
     obj = Candlestick(open=open, high=high, low=low, close=close)
+
     assert not obj.is_bullish
     assert not obj.is_bearish
 
@@ -50,17 +89,25 @@ def test_neither_bear_nor_bull(value, high, low):
     suppress_health_check=(
         HealthCheck.filter_too_much,
         HealthCheck.too_slow,
-    )
+    ),
+    max_examples=250,
 )
 @given(
-    NOT_NAN_DECIMAL,
-    st.decimals(),
-    st.decimals(),
-    NOT_NAN_DECIMAL,
+    DECIMAL,
+    DECIMAL,
+    DECIMAL,
+    DECIMAL,
 )
 def test_bear_or_bull(open, high, low, close):
+    assume(high >= open)
+    assume(high >= low)
+    assume(high >= close)
+    assume(low <= open)
+    assume(low <= close)
+
     assume(close != open)
     obj = Candlestick(open=open, high=high, low=low, close=close)
+
     assert any(x for x in (obj.is_bullish, obj.is_bearish))
     assert not all(x for x in (obj.is_bullish, obj.is_bearish))
 
@@ -69,7 +116,8 @@ def test_bear_or_bull(open, high, low, close):
     suppress_health_check=(
         HealthCheck.filter_too_much,
         HealthCheck.too_slow,
-    )
+    ),
+    max_examples=250,
 )
 @given(*DEFAULT_SCENARIO)
 def test_properties(open, high, low, close):
@@ -78,7 +126,6 @@ def test_properties(open, high, low, close):
     assume(high >= close)
     assume(low <= open)
     assume(low <= close)
-
     obj = Candlestick(open=open, high=high, low=low, close=close)
 
     assert obj.full_len == obj.body_len + obj.wick_len + obj.tail_len
@@ -88,3 +135,88 @@ def test_properties(open, high, low, close):
     assert obj.tail_len == obj.full_len - obj.body_len - obj.wick_len
 
     assert obj.wick_len + obj.tail_len == obj.full_len - obj.body_len
+    assert obj.is_valid_candle
+
+
+@settings(
+    suppress_health_check=(
+        HealthCheck.filter_too_much,
+        HealthCheck.too_slow,
+    ),
+    max_examples=250,
+)
+@given(*DEFAULT_SCENARIO)
+def test_proportions(open, high, low, close):
+    assume(high >= open)
+    assume(high >= low)
+    assume(high >= close)
+    assume(low <= open)
+    assume(low <= close)
+
+    obj = Candlestick(open=open, high=high, low=low, close=close)
+
+    is_flat_candle = open == high == low == close
+
+    assert obj.is_valid_candle
+    if is_flat_candle:
+        assert (
+            obj.body_proportion + obj.tail_proportion + obj.wick_proportion == 0
+            and is_flat_candle
+        ), "%s is not 0" % (
+            obj.body_proportion + obj.tail_proportion + obj.wick_proportion
+        )
+    else:
+        assert (
+            obj.body_proportion + obj.tail_proportion + obj.wick_proportion == 1
+            and not (is_flat_candle)
+        ), "%s is not 1" % (
+            obj.body_proportion + obj.tail_proportion + obj.wick_proportion
+        )
+
+
+@pytest.mark.parametrize(
+    "obj",
+    [
+        Candlestick(
+            open=Decimal("500"),
+            high=Decimal("11600"),
+            low=Decimal("100"),
+            close=Decimal("200"),
+        ),
+        Candlestick(
+            open=Decimal("2"),
+            high=Decimal("4"),
+            low=Decimal("1"),
+            close=Decimal("3"),
+        ),
+        Candlestick(
+            open=Decimal("2"),
+            high=Decimal("4"),
+            low=Decimal("1"),
+            close=Decimal("2"),
+        ),
+        Candlestick(
+            open=Decimal("0.0001"),
+            high=Decimal("0.0002"),
+            low=Decimal("0.0001"),
+            close=Decimal("0.0001"),
+        ),
+    ],
+)
+def test_special_cases_proportions(obj):
+    assert obj.body_proportion + obj.tail_proportion + obj.wick_proportion == 1
+
+
+@pytest.mark.parametrize(
+    "obj",
+    [
+        Candlestick(
+            open=Decimal("0.0001"),
+            high=Decimal("0.0001"),
+            low=Decimal("0.0001"),
+            close=Decimal("0.0001"),
+        ),
+    ],
+)
+def test_special_cases_proportions_zero(obj):
+    assert obj.body_proportion + obj.tail_proportion + obj.wick_proportion == 0
