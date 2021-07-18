@@ -38,6 +38,8 @@ jobs:
           pip install poetry tox tox-gh-actions
 
       - name: test with tox
+        env:
+          HYPOTHESIS_PROFILE: ci
         run: tox
 
       - name: list files
