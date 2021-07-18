@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 import pytest
-from hypothesis import HealthCheck, assume, given, settings
+from hypothesis import assume, given
 from hypothesis import strategies as st
 from kandelero import Candlestick
 from kandelero.calculations import MAX_VALUE, MIN_VALUE
@@ -22,20 +22,16 @@ DEFAULT_SCENARIO = (
 )
 
 
-@settings(
-    suppress_health_check=(
-        HealthCheck.filter_too_much,
-        HealthCheck.too_slow,
-    ),
-    max_examples=250,
-)
 @given(*DEFAULT_SCENARIO)
 def test_is_bullish(open, high, low, close):
+    # is_valid_candle
     assume(high >= open)
     assume(high >= low)
     assume(high >= close)
     assume(low <= open)
     assume(low <= close)
+
+    # is bullish
     assume(close > open)
     obj = Candlestick(open=open, high=high, low=low, close=close)
 
@@ -43,13 +39,6 @@ def test_is_bullish(open, high, low, close):
     assert not obj.is_bearish
 
 
-@settings(
-    suppress_health_check=(
-        HealthCheck.filter_too_much,
-        HealthCheck.too_slow,
-    ),
-    max_examples=250,
-)
 @given(*DEFAULT_SCENARIO)
 def test_is_bearish(open, high, low, close):
     assume(high >= open)
@@ -64,13 +53,6 @@ def test_is_bearish(open, high, low, close):
     assert obj.is_bearish
 
 
-@settings(
-    suppress_health_check=(
-        HealthCheck.filter_too_much,
-        HealthCheck.too_slow,
-    ),
-    max_examples=250,
-)
 @given(DECIMAL, DECIMAL, DECIMAL)
 def test_neither_bear_nor_bull(value, high, low):
     open = close = value
@@ -85,13 +67,6 @@ def test_neither_bear_nor_bull(value, high, low):
     assert not obj.is_bearish
 
 
-@settings(
-    suppress_health_check=(
-        HealthCheck.filter_too_much,
-        HealthCheck.too_slow,
-    ),
-    max_examples=250,
-)
 @given(
     DECIMAL,
     DECIMAL,
@@ -112,13 +87,6 @@ def test_bear_or_bull(open, high, low, close):
     assert not all(x for x in (obj.is_bullish, obj.is_bearish))
 
 
-@settings(
-    suppress_health_check=(
-        HealthCheck.filter_too_much,
-        HealthCheck.too_slow,
-    ),
-    max_examples=250,
-)
 @given(*DEFAULT_SCENARIO)
 def test_properties(open, high, low, close):
     assume(high >= open)
@@ -138,13 +106,6 @@ def test_properties(open, high, low, close):
     assert obj.is_valid_candle
 
 
-@settings(
-    suppress_health_check=(
-        HealthCheck.filter_too_much,
-        HealthCheck.too_slow,
-    ),
-    max_examples=250,
-)
 @given(*DEFAULT_SCENARIO)
 def test_proportions(open, high, low, close):
     assume(high >= open)

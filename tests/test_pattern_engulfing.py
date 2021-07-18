@@ -10,34 +10,19 @@ from kandelero.patterns.comparators import is_bearish_engulfing, is_bullish_engu
 @given(
     data=st.data(),
 )
-def test_is_bearish_engulfing(valid_decimal, decimal_min_value, data):
-    shortest = Candlestick(
-        high=None,
-        low=None,
-        open=data.draw(valid_decimal),
-        close=data.draw(valid_decimal),
-    )
-    assume(shortest.close > shortest.open)  # bullish candle
+def test_is_bearish_engulfing(data, valid_decimal, generate_values):
+    shortest_args = generate_values(data, valid_decimal)
+    longest_args = generate_values(data, valid_decimal)
+    shortest = Candlestick(**shortest_args)
+    longest = Candlestick(**longest_args)
 
-    longest = Candlestick(
-        high=None,
-        low=None,
-        open=data.draw(
-            st.decimals(min_value=shortest.close, allow_infinity=False, allow_nan=False)
-        ),
-        close=data.draw(
-            st.decimals(
-                allow_infinity=False,
-                allow_nan=False,
-                max_value=shortest.open - decimal_min_value,
-            )
-        ),
-    )
-    assume(longest.close < longest.open)  # bearish candle
+    assume(shortest.is_bullish)
+    assume(longest.is_bearish)
 
+    assume(
+        longest.close < shortest.open and longest.open >= shortest.close
+    )  # engulfing
     assert is_bearish_engulfing(shortest, longest)
-    assert shortest.is_bullish
-    assert longest.is_bearish
 
 
 @pytest.mark.bullish_pattern
@@ -45,36 +30,15 @@ def test_is_bearish_engulfing(valid_decimal, decimal_min_value, data):
 @given(
     data=st.data(),
 )
-def test_is_bullish_engulfing(valid_decimal, decimal_min_value, data):
-    shortest = Candlestick(
-        high=None,
-        low=None,
-        open=data.draw(valid_decimal),
-        close=data.draw(valid_decimal),
-    )
-    assume(shortest.close < shortest.open)  # bearish candle
+def test_is_bullish_engulfing(data, valid_decimal, generate_values):
+    shortest_args = generate_values(data, valid_decimal)
+    longest_args = generate_values(data, valid_decimal)
+    shortest = Candlestick(**shortest_args)
+    longest = Candlestick(**longest_args)
+    assume(
+        longest.close > shortest.open and longest.open <= shortest.close
+    )  # engulfing
 
-    longest = Candlestick(
-        high=None,
-        low=None,
-        open=data.draw(
-            st.decimals(
-                max_value=shortest.close,
-                allow_infinity=False,
-                allow_nan=False,
-                min_value=decimal_min_value,
-            )
-        ),
-        close=data.draw(
-            st.decimals(
-                allow_infinity=False,
-                allow_nan=False,
-                min_value=shortest.open + decimal_min_value,
-            )
-        ),
-    )
-    assume(longest.close > longest.open)  # bullish candle
-
+    assume(shortest.is_bearish)
+    assume(longest.is_bullish)
     assert is_bullish_engulfing(shortest, longest)
-    assert shortest.is_bearish
-    assert longest.is_bullish

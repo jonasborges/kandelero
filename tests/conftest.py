@@ -49,3 +49,19 @@ def valid_decimal(decimal_min_value, decimal_max_value, decimal_max_places):
         allow_infinity=False,
         places=decimal_max_places,
     )
+
+
+@pytest.fixture(scope="session")
+def generate_values():
+    def _gen(data, valid_decimal):
+        result = dict(
+            high=data.draw(valid_decimal),
+            low=data.draw(valid_decimal),
+            open=data.draw(valid_decimal),
+            close=data.draw(valid_decimal),
+        )
+        assume(max(result.values()) == result["high"])
+        assume(min(result.values()) == result["low"])
+        return result
+
+    return _gen
