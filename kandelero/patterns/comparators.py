@@ -1,6 +1,12 @@
 from kandelero.candlestick import Candlestick
 
-from .helpers import is_gap_down, is_gap_up, is_harami_size
+from .helpers import (
+    is_gap_down,
+    is_gap_up,
+    is_hammer_like,
+    is_harami_size,
+    is_inverted_hammer_like,
+)
 
 
 def is_bullish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
@@ -75,6 +81,14 @@ def is_bearish_harami(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+def is_hammer(candlestick: Candlestick) -> bool:
+    return is_hammer_like(candlestick=candlestick)
+
+
+def is_inverted_hammer(candlestick: Candlestick) -> bool:
+    return is_inverted_hammer_like(candlestick=candlestick)
+
+
 COMPARATORS = [
     is_bearish_engulfing,
     is_bullish_engulfing,
@@ -82,4 +96,10 @@ COMPARATORS = [
     is_bearish_kicker,
     is_bearish_harami,
     is_bullish_harami,
+]
+
+
+SINGLE_CANDLE_COMPARATORS = [
+    is_hammer,
+    is_inverted_hammer,
 ]

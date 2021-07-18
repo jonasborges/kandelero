@@ -12,6 +12,8 @@ from kandelero.patterns.names import get_pattern_name
         (comparators.is_bullish_engulfing, "Bullish Engulfing"),
         (comparators.is_bullish_harami, "Bullish Harami"),
         (comparators.is_bullish_kicker, "Bullish Kicker"),
+        (comparators.is_hammer, "Hammer"),
+        (comparators.is_inverted_hammer, "Inverted Hammer"),
     ),
 )
 def test_get_pattern_name(comparator, expected_name):

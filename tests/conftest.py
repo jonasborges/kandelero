@@ -2,18 +2,6 @@ from decimal import Decimal
 
 import pytest
 from hypothesis import strategies as st
-from kandelero import Candlestick
-
-
-@pytest.fixture(scope="session")
-def hammer():
-    """Nasdaq Daily: 2020-04-13"""
-    return Candlestick(
-        open=Decimal("8290.65"),
-        high=Decimal("8346.95"),
-        low=Decimal("8083.85"),
-        close=Decimal("8346.95"),
-    )
 
 
 @pytest.fixture(scope="session")
