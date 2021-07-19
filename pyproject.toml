@@ -82,6 +82,7 @@ exclude = '''
 '''
 
 [tool.pytest.ini_options]
+addopts = ["--strict-markers"]
 markers = [
     "happy_path: marks tests as happy_path (deselect with '-m \"not happy_path\"')",
     "unhappy_path: marks tests as unhappy_path (deselect with '-m \"not unhappy_path\"')",

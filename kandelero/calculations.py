@@ -8,12 +8,6 @@ MIN_VALUE = Decimal("0.0001")
 MAX_VALUE = Decimal("9999999999")
 
 
-def round_up(number: Decimal, decimal_places: int = DECIMAL_PLACES) -> Decimal:
-    factor = 10 ** decimal_places
-    result = safe_div(dividend=math.ceil(number * factor), divisor=factor)
-    return Decimal(result).quantize(Decimal(10) ** -DECIMAL_PLACES)
-
-
 def round_down(number: Decimal, decimal_places: int = DECIMAL_PLACES) -> Decimal:
     factor = 10 ** decimal_places
     result = safe_div(dividend=math.floor(number * factor), divisor=factor)
