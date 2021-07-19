@@ -58,6 +58,7 @@ doc = [
 [tool.poetry.dev-dependencies]
 hypothesis = "^6.14.1"
 pytest-xdist = { extras = ["psutil"], version = "^2.3.0" }
+pytest-randomly = "^3.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
