@@ -90,8 +90,25 @@ def test_is_bullish_harami(previous, current):
 @pytest.mark.happy_path
 @pytest.mark.parametrize(
     "previous, current",
-    (),
-    ids=[],
+    (
+        [
+            Candlestick(
+                open=Decimal("14676.7500"),
+                high=Decimal("14680.1500"),
+                low=Decimal("14673.1500"),
+                close=Decimal("14673.8500"),
+            ),
+            Candlestick(
+                open=Decimal("14673.8500"),
+                high=Decimal("14675.2500"),
+                low=Decimal("14667.3500"),
+                close=Decimal("14673.8500"),
+            ),
+        ],
+    ),
+    ids=[
+        "Nasdaq 1 Minute: 2021-07-20 16:31 -> 16:32",
+    ],
 )
 def test_is_bullish_harami_cross(previous, current):
     assert previous.is_bearish
@@ -120,9 +137,24 @@ def test_is_bullish_harami_cross(previous, current):
                 close=Decimal("14570.4500"),
             ),
         ],
+        [
+            Candlestick(
+                open=Decimal("14747.0500"),
+                high=Decimal("14750.7500"),
+                low=Decimal("14746.5500"),
+                close=Decimal("14750.7500"),
+            ),
+            Candlestick(  # this one is perfect
+                open=Decimal("14750.5500"),
+                high=Decimal("14751.8500"),
+                low=Decimal("14749.0500"),
+                close=Decimal("14750.5500"),
+            ),
+        ],
     ),
     ids=[
         "Nasdaq 1 Minute: 2021-07-19 14:44 -> 14:45",
+        "Nasdaq 1 Minute: 2021-07-20 17:58 -> 17:59",
     ],
 )
 def test_is_bearish_harami_cross(previous, current):

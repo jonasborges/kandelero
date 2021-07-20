@@ -38,10 +38,25 @@ from kandelero.patterns.comparators import is_hanging_man
                 close=Decimal("14514.0500"),
             ),
         ],
+        [
+            Candlestick(
+                open=Decimal("14638.6000"),
+                high=Decimal("14641.7000"),
+                low=Decimal("14638.6000"),
+                close=Decimal("14641.7000"),
+            ),
+            Candlestick(
+                open=Decimal("14641.8000"),
+                high=Decimal("14643.3000"),
+                low=Decimal("14637.2000"),
+                close=Decimal("14643.2000"),
+            ),
+        ],
     ),
     ids=[
         "Nasdaq 1 Minute: 2021-07-19 08:29 -> 08:30",
         "Nasdaq 1 Minute: 2021-07-19 15:49 -> 15:50",
+        "Nasdaq 1 Minute: 2021-07-20 07:33 -> 07:34",
     ],
 )
 def test_is_hanging_man(previous, current):
