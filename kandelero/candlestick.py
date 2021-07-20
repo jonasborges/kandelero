@@ -13,10 +13,10 @@ class Candlestick:
         low: Decimal,
         close: Decimal,
     ):
-        self.open = Decimal(open)
-        self.high = Decimal(high)
-        self.low = Decimal(low)
-        self.close = Decimal(close)
+        self.open = round_down(Decimal(open))
+        self.high = round_down(Decimal(high))
+        self.low = round_down(Decimal(low))
+        self.close = round_down(Decimal(close))
 
         self._body_proportion = round_down(
             safe_div(dividend=self.body_len, divisor=self.full_len)

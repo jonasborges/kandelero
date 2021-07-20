@@ -10,6 +10,7 @@ from .helpers import (
 
 
 def is_bullish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
+    """Engulfs previous candle body. Wick and tail not included"""
     return (
         previous.is_bearish
         and current.is_bullish
@@ -19,6 +20,7 @@ def is_bullish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
 
 
 def is_bearish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
+    """Engulfs previous candle body. Wick and tail not included"""
     return (
         previous.is_bullish
         and current.is_bearish
@@ -69,6 +71,7 @@ def is_bullish_harami(previous: Candlestick, current: Candlestick) -> bool:
 def is_bearish_harami(previous: Candlestick, current: Candlestick) -> bool:
     current_open_inside_previous = previous.open <= current.open <= previous.close
     current_close_inside_previous = previous.open <= current.close <= previous.close
+
     return (
         previous.is_bullish
         and current.is_bearish
