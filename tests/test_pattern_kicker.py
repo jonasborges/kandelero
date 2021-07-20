@@ -35,7 +35,7 @@ def test_is_bearish_kicker(previous, current):
     assert is_bearish_kicker(previous, current)
 
 
-@pytest.mark.bearish_pattern
+@pytest.mark.bullish_pattern
 @pytest.mark.happy_path
 @pytest.mark.parametrize(
     "previous, current",

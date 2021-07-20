@@ -6,6 +6,7 @@ from kandelero.patterns.comparators import (
     is_bearish_harami,
     is_bearish_harami_cross,
     is_bullish_harami,
+    is_bullish_harami_cross,
 )
 
 
@@ -83,6 +84,19 @@ def test_is_bullish_harami(previous, current):
     assert current.is_bullish
     result = is_bullish_harami(previous, current)
     assert result
+
+
+@pytest.mark.bullish_pattern
+@pytest.mark.happy_path
+@pytest.mark.parametrize(
+    "previous, current",
+    (),
+    ids=[],
+)
+def test_is_bullish_harami_cross(previous, current):
+    assert previous.is_bearish
+    assert not current.is_bearish and not current.is_bullish
+    assert is_bullish_harami_cross(previous, current)
 
 
 @pytest.mark.bearish_pattern
