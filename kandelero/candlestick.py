@@ -136,3 +136,13 @@ class Candlestick:
     @property
     def tail_proportion(self) -> Decimal:
         return self._tail_proportion
+
+    @property
+    def middle_point(self):
+        """Exact value between open and close"""
+        distance_from_middle = self.body_len / 2
+
+        if self.is_bearish:
+            return self.close + distance_from_middle
+        elif self.is_bullish:
+            return self.open + distance_from_middle

@@ -19,6 +19,8 @@ from kandelero.patterns.names import get_pattern_name
         (comparators.is_bearish_harami_cross, "Bearish Harami Cross"),
         (comparators.is_hanging_man, "Hanging Man"),
         (comparators.is_shooting_star, "Shooting Star"),
+        (comparators.is_piercing_line, "Piercing Line"),
+        (comparators.is_dark_cloud_cover, "Dark Cloud Cover"),
     ),
 )
 def test_get_pattern_name(comparator, expected_name):

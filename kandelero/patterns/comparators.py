@@ -140,6 +140,26 @@ def is_shooting_star(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+def is_piercing_line(previous: Candlestick, current: Candlestick) -> bool:
+    return (
+        previous.is_bearish
+        and current.is_bullish
+        and current.open < previous.close
+        # above the middle but not engulfing previous candle
+        and previous.middle_point < current.close < previous.open
+    )
+
+
+def is_dark_cloud_cover(previous: Candlestick, current: Candlestick) -> bool:
+    return (
+        previous.is_bullish
+        and current.is_bearish
+        and current.open > previous.close
+        # below the middle but not engulfing previous candle
+        and previous.open < current.close < previous.middle_point
+    )
+
+
 COMPARATORS = [
     is_bearish_engulfing,
     is_bullish_engulfing,
@@ -151,6 +171,8 @@ COMPARATORS = [
     is_bearish_harami_cross,
     is_hanging_man,
     is_shooting_star,
+    is_piercing_line,
+    is_dark_cloud_cover,
 ]
 
 
