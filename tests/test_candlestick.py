@@ -157,10 +157,10 @@ def test_proportions(open, high, low, close):
             close=Decimal("2"),
         ),
         Candlestick(
-            open=Decimal("0.0001"),
-            high=Decimal("0.0002"),
-            low=Decimal("0.0001"),
-            close=Decimal("0.0001"),
+            open=Decimal("0.00001"),
+            high=Decimal("0.00002"),
+            low=Decimal("0.00001"),
+            close=Decimal("0.00001"),
         ),
     ],
 )

@@ -2,9 +2,9 @@ import math
 from decimal import Decimal, DivisionByZero, DivisionUndefined, InvalidOperation
 from functools import wraps
 
-DECIMAL_PLACES = 4
+DECIMAL_PLACES = 5
 ZERO = Decimal(0)
-MIN_VALUE = Decimal("0.0001")
+MIN_VALUE = Decimal("0.00001")
 MAX_VALUE = Decimal("9999999999")
 
 

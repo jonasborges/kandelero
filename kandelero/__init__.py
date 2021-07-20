@@ -9,4 +9,4 @@ from decimal import getcontext
 
 from .candlestick import Candlestick
 
-getcontext().prec = 15
+getcontext().prec = 16
