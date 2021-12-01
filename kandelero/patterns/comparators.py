@@ -1,6 +1,9 @@
 from kandelero.candlestick import Candlestick
+from kandelero.context import Bottom, MarketContext, Top
 
 from .helpers import (
+    is_bearish_breakout_attempt,
+    is_bullish_breakout_attempt,
     is_gap_down,
     is_gap_up,
     is_hammer_like,
@@ -160,6 +163,42 @@ def is_dark_cloud_cover(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+def is_bull_trap(
+    previous: Candlestick, current: Candlestick, market_context: MarketContext
+) -> bool:
+    for top in market_context.get_tops():
+        closed_below_previous = current.close <= previous.low
+        closed_below_top = current.close < top.value
+        conditions = (
+            previous.is_bullish,
+            current.is_bearish,
+            is_bullish_breakout_attempt(candlestick=previous, top=top),
+            closed_below_previous,
+            closed_below_top,
+        )
+        if all(conditions):
+            return True
+    return False
+
+
+def is_bear_trap(
+    previous: Candlestick, current: Candlestick, market_context: MarketContext
+) -> bool:
+    for bottom in market_context.get_bottoms():
+        closed_above_previous = current.close >= previous.high
+        closed_above_bottom = current.close > bottom.value
+        conditions = (
+            previous.is_bearish,
+            current.is_bullish,
+            is_bearish_breakout_attempt(candlestick=previous, bottom=bottom),
+            closed_above_previous,
+            closed_above_bottom,
+        )
+        if all(conditions):
+            return True
+    return False
+
+
 COMPARATORS = [
     is_bearish_engulfing,
     is_bullish_engulfing,
@@ -173,6 +212,11 @@ COMPARATORS = [
     is_shooting_star,
     is_piercing_line,
     is_dark_cloud_cover,
+]
+
+CONTEXT_COMPARATORS = [
+    is_bull_trap,
+    is_bear_trap,
 ]
 
 

@@ -1,4 +1,5 @@
 import pytest
+
 from kandelero.patterns import comparators
 from kandelero.patterns.names import get_pattern_name
 
@@ -21,6 +22,8 @@ from kandelero.patterns.names import get_pattern_name
         (comparators.is_shooting_star, "Shooting Star"),
         (comparators.is_piercing_line, "Piercing Line"),
         (comparators.is_dark_cloud_cover, "Dark Cloud Cover"),
+        (comparators.is_bear_trap, "Bear Trap"),
+        (comparators.is_bull_trap, "Bull Trap"),
     ),
 )
 def test_get_pattern_name(comparator, expected_name):

@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 import pytest
+
 from kandelero import Candlestick
 from kandelero.patterns.comparators import is_shooting_star
 

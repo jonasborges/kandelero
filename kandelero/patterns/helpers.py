@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from kandelero.candlestick import Candlestick
+from kandelero.context.market_context import Bottom, Top
 
 
 def is_hammer_like(candlestick: Candlestick) -> bool:
@@ -29,3 +30,11 @@ def is_gap_down(previous: Candlestick, current: Candlestick) -> bool:
 
 def is_harami_size(previous: Candlestick, current: Candlestick) -> bool:
     return current.body_len <= (previous.body_len * Decimal("0.5"))
+
+
+def is_bullish_breakout_attempt(candlestick: Candlestick, top: Top):
+    return candlestick.high > top.value
+
+
+def is_bearish_breakout_attempt(candlestick: Candlestick, bottom: Bottom):
+    return candlestick.low < bottom.value

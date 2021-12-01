@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 import pytest
+
 from kandelero import Candlestick
 from kandelero.patterns.comparators import is_bearish_engulfing, is_bullish_engulfing
 

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from datetime import date, datetime
 from decimal import Decimal
 from itertools import cycle
+from typing import Optional, Union
 
 from .calculations import MIN_VALUE, ZERO, round_down, safe_div
 
@@ -12,11 +14,18 @@ class Candlestick:
         high: Decimal,
         low: Decimal,
         close: Decimal,
+        timestamp: Optional[Union[(str, datetime)]] = None,
     ):
         self.open = round_down(Decimal(open))
         self.high = round_down(Decimal(high))
         self.low = round_down(Decimal(low))
         self.close = round_down(Decimal(close))
+        if isinstance(timestamp, datetime):
+            self.timestamp = timestamp
+        else:
+            self.timestamp = (
+                datetime.fromisoformat(timestamp) if timestamp is not None else None
+            )
 
         self._body_proportion = round_down(
             safe_div(dividend=self.body_len, divisor=self.full_len)

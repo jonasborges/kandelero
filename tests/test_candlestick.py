@@ -3,6 +3,7 @@ from decimal import Decimal
 import pytest
 from hypothesis import assume, given
 from hypothesis import strategies as st
+
 from kandelero import Candlestick
 from kandelero.calculations import MAX_VALUE, MIN_VALUE
 

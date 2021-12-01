@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 import pytest
+
 from kandelero import Candlestick
 from kandelero.patterns.comparators import is_dark_cloud_cover, is_piercing_line
 

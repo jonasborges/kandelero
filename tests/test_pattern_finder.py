@@ -2,6 +2,7 @@ from decimal import Decimal
 from unittest import mock
 
 import pytest
+
 from kandelero.candlestick import Candlestick
 from kandelero.patterns import COMPARATORS, find_patterns
 
