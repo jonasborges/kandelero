@@ -1,5 +1,12 @@
+from dataclasses import dataclass
+from functools import wraps
+from typing import Callable
+
+from kandelero import patterns
 from kandelero.candlestick import Candlestick
 from kandelero.context import Bottom, MarketContext, Top
+from kandelero.context.market_context import PriceLevel
+from kandelero.patterns.names import get_pattern_name
 
 from .helpers import (
     is_bearish_breakout_attempt,
@@ -12,10 +19,68 @@ from .helpers import (
 )
 
 
+@dataclass
+class PatternFound:
+    comparator: Callable
+    previous: Candlestick
+    current: Candlestick
+    price_level: PriceLevel
+
+    def __post_init__(self):
+        self.name = get_pattern_name(self.comparator)
+
+
+def market_context_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    wrapper.market_context_required = True
+    return wrapper
+
+
+@dataclass
+class ComparatorResponse:
+    found: bool
+    pattern: callable
+
+    def get_details(self):
+        return get_pattern_name(self.pattern)
+
+    def __bool__(self):
+        return self.found
+
+
+@dataclass
+class ComparatorResponseWithContext(ComparatorResponse):
+    pattern: PatternFound = None
+
+    def get_details(self):
+        p = self.pattern
+        return " - ".join(
+            (
+                p.name,
+                p.price_level.candlestick.timestamp.isoformat().replace("T", " "),
+                f"{p.price_level.__class__.__name__}: {p.price_level.value}",
+            )
+        )
+
+
+def comparator_response(func: Callable):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        response: bool = func(*args, **kwargs)
+        return ComparatorResponse(found=response, pattern=func)
+
+    return wrapper
+
+
+@comparator_response
 def is_doji(candlestick: Candlestick) -> bool:
     return candlestick.open == candlestick.close
 
 
+@comparator_response
 def is_bullish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
     """Engulfs previous candle body. Wick and tail not included"""
     return (
@@ -26,6 +91,7 @@ def is_bullish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@comparator_response
 def is_bearish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
     """Engulfs previous candle body. Wick and tail not included"""
     return (
@@ -36,6 +102,7 @@ def is_bearish_engulfing(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@comparator_response
 def is_bullish_kicker(previous: Candlestick, current: Candlestick) -> bool:
     return (
         previous.is_bearish
@@ -48,6 +115,7 @@ def is_bullish_kicker(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@comparator_response
 def is_bearish_kicker(previous: Candlestick, current: Candlestick) -> bool:
     return (
         previous.is_bullish
@@ -60,6 +128,7 @@ def is_bearish_kicker(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@comparator_response
 def is_bullish_harami(previous: Candlestick, current: Candlestick) -> bool:
     current_open_inside_previous = previous.close <= current.open <= previous.open
     current_close_inside_previous = previous.close <= current.close <= previous.open
@@ -75,6 +144,7 @@ def is_bullish_harami(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@comparator_response
 def is_bearish_harami(previous: Candlestick, current: Candlestick) -> bool:
     current_open_inside_previous = previous.open <= current.open <= previous.close
     current_close_inside_previous = previous.open <= current.close <= previous.close
@@ -91,6 +161,7 @@ def is_bearish_harami(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@comparator_response
 def is_bearish_harami_cross(previous: Candlestick, current: Candlestick) -> bool:
     current_open_inside_previous = previous.open <= current.open <= previous.close
     current_close_inside_previous = previous.open <= current.close <= previous.close
@@ -107,6 +178,7 @@ def is_bearish_harami_cross(previous: Candlestick, current: Candlestick) -> bool
     )
 
 
+@comparator_response
 def is_bullish_harami_cross(previous: Candlestick, current: Candlestick) -> bool:
     current_open_inside_previous = previous.close <= current.open <= previous.open
     current_close_inside_previous = previous.close <= current.close <= previous.open
@@ -123,26 +195,31 @@ def is_bullish_harami_cross(previous: Candlestick, current: Candlestick) -> bool
     )
 
 
+@comparator_response
 def is_hammer(candlestick: Candlestick) -> bool:
     return is_hammer_like(candlestick=candlestick)
 
 
+@comparator_response
 def is_inverted_hammer(candlestick: Candlestick) -> bool:
     return is_inverted_hammer_like(candlestick=candlestick)
 
 
+@comparator_response
 def is_hanging_man(previous: Candlestick, current: Candlestick) -> bool:
     return is_gap_up(previous=previous, current=current) and is_hammer_like(
         candlestick=current
     )
 
 
+@comparator_response
 def is_shooting_star(previous: Candlestick, current: Candlestick) -> bool:
     return is_gap_up(previous=previous, current=current) and is_inverted_hammer_like(
         candlestick=current
     )
 
 
+@comparator_response
 def is_piercing_line(previous: Candlestick, current: Candlestick) -> bool:
     return (
         previous.is_bearish
@@ -153,6 +230,7 @@ def is_piercing_line(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@comparator_response
 def is_dark_cloud_cover(previous: Candlestick, current: Candlestick) -> bool:
     return (
         previous.is_bullish
@@ -163,10 +241,11 @@ def is_dark_cloud_cover(previous: Candlestick, current: Candlestick) -> bool:
     )
 
 
+@market_context_required
 def is_bull_trap(
     previous: Candlestick, current: Candlestick, market_context: MarketContext
-) -> bool:
-    for top in market_context.get_tops():
+) -> ComparatorResponse:
+    for top in market_context.get_tops(before_date=previous.timestamp):
         closed_below_previous = current.close <= previous.low
         closed_below_top = current.close < top.value
         conditions = (
@@ -177,14 +256,23 @@ def is_bull_trap(
             closed_below_top,
         )
         if all(conditions):
-            return True
-    return False
+            return ComparatorResponseWithContext(
+                found=True,
+                pattern=PatternFound(
+                    price_level=top,
+                    previous=previous,
+                    current=previous,
+                    comparator=is_bull_trap,
+                ),
+            )
+    return ComparatorResponseWithContext(found=False)
 
 
+@market_context_required
 def is_bear_trap(
     previous: Candlestick, current: Candlestick, market_context: MarketContext
-) -> bool:
-    for bottom in market_context.get_bottoms():
+) -> ComparatorResponse:
+    for bottom in market_context.get_bottoms(before_date=previous.timestamp):
         closed_above_previous = current.close >= previous.high
         closed_above_bottom = current.close > bottom.value
         conditions = (
@@ -195,8 +283,16 @@ def is_bear_trap(
             closed_above_bottom,
         )
         if all(conditions):
-            return True
-    return False
+            return ComparatorResponseWithContext(
+                found=True,
+                pattern=PatternFound(
+                    price_level=bottom,
+                    previous=previous,
+                    current=previous,
+                    comparator=is_bear_trap,
+                ),
+            )
+    return ComparatorResponseWithContext(found=False)
 
 
 COMPARATORS = [

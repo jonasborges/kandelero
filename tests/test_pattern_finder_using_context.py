@@ -7,11 +7,15 @@ from kandelero import context
 from kandelero.candlestick import Candlestick
 from kandelero.context.market_context import Bottom, MarketContext, TimeFrame, Top
 from kandelero.patterns import CONTEXT_COMPARATORS, find_patterns
+from kandelero.patterns.comparators import ComparatorResponse
 
 
 @pytest.fixture
 def false_comparators():
-    return [mock.Mock(return_value=False) for __ in range(10)]
+    return [
+        mock.Mock(return_value=ComparatorResponse(found=False, pattern=None))
+        for __ in range(10)
+    ]
 
 
 @pytest.fixture
@@ -27,6 +31,7 @@ def dummy_candlestick(impossible_value):
         low=impossible_value,
         open=impossible_value,
         close=impossible_value,
+        timestamp="2021-11-18T17:00:00",
     )
 
 
@@ -67,8 +72,13 @@ def bottoms():
 
 
 @pytest.fixture
-def market_context(tops, bottoms):
-    return MarketContext(tops=tops, bottoms=bottoms)
+def symbol():
+    return "EURUSD"
+
+
+@pytest.fixture
+def market_context(symbol, tops, bottoms):
+    return MarketContext(symbol=symbol, tops=tops, bottoms=bottoms)
 
 
 def test_pattern_finder_no_pattern(dummy_candlestick, market_context):
@@ -79,7 +89,7 @@ def test_pattern_finder_no_pattern(dummy_candlestick, market_context):
         current=current,
         market_context=market_context,
     )
-    assert result == []
+    assert list(result) == []
 
 
 def test_pattern_finder_at_least_one_match(
@@ -87,7 +97,9 @@ def test_pattern_finder_at_least_one_match(
 ):
     current = previous = dummy_candlestick
 
-    always_true_comparator = mock.Mock(return_value=True)
+    always_true_comparator = mock.Mock(
+        return_value=ComparatorResponse(found=True, pattern=None)
+    )
 
     result = find_patterns(
         comparators=[always_true_comparator, *false_comparators],
@@ -95,5 +107,5 @@ def test_pattern_finder_at_least_one_match(
         current=current,
         market_context=market_context,
     )
+    result = list(result)
     assert len(result) == 1
-    assert result[0] == always_true_comparator

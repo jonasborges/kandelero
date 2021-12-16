@@ -28,6 +28,7 @@ def test_is_bull_trap():
     )
 
     market_context = MarketContext(
+        symbol="EURUSD",
         tops=[
             Top(
                 value=1.13737,
@@ -69,6 +70,7 @@ def test_is_bear_trap():
     )
 
     market_context = MarketContext(
+        symbol="EURGBP",
         tops=[],
         bottoms=[
             Bottom(

@@ -1,13 +1,21 @@
-from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal
 from itertools import cycle
 from typing import Optional, Union
 
 from .calculations import MIN_VALUE, ZERO, round_down, safe_div
+from .utils import parse_date
 
 
 class Candlestick:
+    def __repr__(self) -> str:
+        timestamp = self.timestamp
+        open = self.open
+        high = self.high
+        low = self.low
+        close = self.close
+        return f"Candlestick({timestamp=}, {open=}, {high=}, {low=}, {close=})"
+
     def __init__(
         self,
         open: Decimal,
@@ -20,12 +28,7 @@ class Candlestick:
         self.high = round_down(Decimal(high))
         self.low = round_down(Decimal(low))
         self.close = round_down(Decimal(close))
-        if isinstance(timestamp, datetime):
-            self.timestamp = timestamp
-        else:
-            self.timestamp = (
-                datetime.fromisoformat(timestamp) if timestamp is not None else None
-            )
+        self.timestamp = parse_date(timestamp)
 
         self._body_proportion = round_down(
             safe_div(dividend=self.body_len, divisor=self.full_len)
