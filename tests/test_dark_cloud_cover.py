@@ -53,14 +53,29 @@ from kandelero.patterns.comparators import is_dark_cloud_cover, is_piercing_line
                 close=Decimal("9447.95000"),
             ),
         ],
+        [
+            Candlestick(
+                open=Decimal("16442.85"),
+                high=Decimal("16484.25"),
+                low=Decimal("16426.95"),
+                close=Decimal("16462.95"),
+            ),
+            Candlestick(
+                open=Decimal("16465.95"),
+                high=Decimal("16472.45"),
+                low=Decimal("16429.85"),
+                close=Decimal("16444.15"),
+            ),
+        ],
     ),
     ids=[
         "Nasdaq 1 Day: 2019-08-19 -> 2019-08-20",
         "Nasdaq 1 Day: 2019-08-21 -> 2019-08-22",
         "Nasdaq 1 Week: 2020-03-15 -> 2020-03-22",
+        "Nasdaq 5 Min: 2022-01-03 14:40:00 -> 14:35:00",
     ],
 )
-def test_is_piercing_line(previous, current):
+def test_is_dark_cloud_cover(previous, current):
     assert is_dark_cloud_cover(previous=previous, current=current)
 
     # Dark Cloud Cover is the opposite of Piercing Line
