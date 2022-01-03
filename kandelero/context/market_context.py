@@ -2,7 +2,9 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from decimal import Decimal
 from enum import Enum
-from typing import List, Tuple, Union
+from typing import Dict, List, Tuple, Union
+
+import pandas as pd
 
 from kandelero import Candlestick
 from kandelero.utils import get_df
@@ -73,6 +75,7 @@ timeframes = [
     "OneHour",
     "FifteenMinutes",
     "FiveMinutes",
+    "OneMinute",
 ]
 
 
@@ -83,11 +86,17 @@ class MarketContext:
         tops: List[Top] = None,
         bottoms: List[Bottom] = None,
         date_filter: Union[datetime, str, None] = None,
+        df_set: Dict[str, pd.DataFrame] = None,
+        load_df=False,
+        find_price_levels=False,
     ):
-        self.df_set = {
-            tf: get_df(symbol=symbol, timeframe=tf, date_filter=date_filter)
-            for tf in timeframes
-        }
+        df_set = df_set or []
+        self.df_set = df_set
+        if load_df:
+            self.df_set = df_set or {
+                tf: get_df(symbol=symbol, timeframe=tf, date_filter=date_filter)
+                for tf in timeframes
+            }
 
         self._tops = {}
         self._bottoms = {}
@@ -102,7 +111,7 @@ class MarketContext:
         for bottom in bottoms:
             self.add_new_price_level(bottom)
 
-        if not tops and not bottoms:
+        if find_price_levels and (not tops and not bottoms):
             self.find_price_levels()
 
     @staticmethod
