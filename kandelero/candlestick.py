@@ -158,3 +158,9 @@ class Candlestick:
             return self.close + distance_from_middle
         elif self.is_bullish:
             return self.open + distance_from_middle
+
+    @property
+    def size_on_chart(self):
+        value = abs(self.high / self.open - 1) + abs(self.low / self.open - 1)
+        value = value * -1 if self.is_bearish else value
+        return value
