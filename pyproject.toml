@@ -27,7 +27,7 @@ flake8 = "^4.0.1"
 flake8-docstrings = { version = "^1.6.0", optional = true }
 pytest = { version = "7.1.1", optional = true }
 pytest-cov = "^3.0.0"
-tox = "^3.24.4"
+tox = "^3.24.5"
 virtualenv = { version = "^20.13.3", optional = true }
 pip = { version = "^20.3.1", optional = true }
 mkdocs = { version = "^1.1.2", optional = true }
