@@ -55,7 +55,7 @@ doc = [
 ]
 
 [tool.poetry.dev-dependencies]
-hypothesis = "^6.40.0"
+hypothesis = "^6.43.3"
 pytest-xdist = { extras = ["psutil"], version = "^2.5.0" }
 pytest-randomly = "^3.11.0"
 
