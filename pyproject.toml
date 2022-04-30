@@ -40,7 +40,7 @@ mkdocs-autorefs = { version = "0.4.1", optional = true }
 pre-commit = "^2.18.1"
 toml = { version = "^0.10.2", optional = true }
 livereload = "^2.6.0"
-pandas = "^1.4.1"
+pandas = "^1.4.2"
 
 [tool.poetry.extras]
 test = ["pytest", "black", "isort", "flake8", "flake8-docstrings", "pytest-cov"]
