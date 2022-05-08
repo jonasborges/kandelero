@@ -247,7 +247,7 @@ dev = ["twine", "markdown", "flake8", "wheel"]
 
 [[package]]
 name = "hypothesis"
-version = "6.46.1"
+version = "6.46.2"
 description = "A library for property-based testing"
 category = "dev"
 optional = false
@@ -1120,7 +1120,7 @@ test = ["pytest", "black", "isort", "flake8", "flake8-docstrings", "pytest-cov"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<4.0"
-content-hash = "06dedfe92a6a201f598b25bf55db6f0e27e1ee016aa431c10a6e8f7766c67ca1"
+content-hash = "756f93f90efdb5ca00052f13f534ce8b81a999d05adb473fdba1872623cc33ec"
 
 [metadata.files]
 astunparse = [
@@ -1335,8 +1335,8 @@ ghp-import = [
     {file = "ghp_import-2.0.2-py3-none-any.whl", hash = "sha256:5f8962b30b20652cdffa9c5a9812f7de6bcb56ec475acac579807719bf242c46"},
 ]
 hypothesis = [
-    {file = "hypothesis-6.46.1-py3-none-any.whl", hash = "sha256:42e1e86600f0910f1ead954c4e96ab3a1f3bd3225faef8ea1a96377368e10a62"},
-    {file = "hypothesis-6.46.1.tar.gz", hash = "sha256:2ef1753aeb8013e0c911601f445a3ea894bc19960043c505fe3313712093acf9"},
+    {file = "hypothesis-6.46.2-py3-none-any.whl", hash = "sha256:37ca37f61939d0a92c18b5e17ab8088dccc5fc077c913d6619bbe1d233dfca1e"},
+    {file = "hypothesis-6.46.2.tar.gz", hash = "sha256:c671b3801527f3a8189314d9385418a67d4c7ab1b3330a3ff8b267d0d4599b3d"},
 ]
 identify = [
     {file = "identify-2.4.0-py2.py3-none-any.whl", hash = "sha256:eba31ca80258de6bb51453084bff4a923187cd2193b9c13710f2516ab30732cc"},
